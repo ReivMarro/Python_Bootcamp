@@ -5,20 +5,32 @@
 # 5. Print out pokemon data
 
 import requests
+import random
 
-pokemon = input("What Pokemon do you want to find? ")
-pokemon = pokemon.lower() # Step 1 completed. I need to specify pokemon.lower since we are working with a mutable variable
+while True:
+    pokemon = input("What Pokemon do you want to find? ")
+    pokemon = pokemon.lower() # Step 1 completed. I need to specify pokemon.lower since we are working with a mutable variable
 
-url = f"https://pokeapi.co/api/v2/pokemon/{pokemon}" # Step 2, dynamic URL
+    url = f"https://pokeapi.co/api/v2/pokemon/{pokemon}" # Step 2, dynamic URL
 
-req = requests.get(url) # This needs 'import requests' at the beginning
-if req.status_code == 200: # This links to line 27. Made in case a non-existent pokemon name is 'input'
-    data = req.json() # This covers step 4
+    req = requests.get(url) # This needs 'import requests' at the beginning (line 7)
+    if req.status_code == 200: # This links to line 25. Made in case a non-existent pokemon name is 'input'
+        data = req.json() # This covers step 4
 
-    print(f"Name is \t\t{data['name']}") 
-    print("Abilities:") 
-    for ability in data['abilities']:
-        print(ability['ability']['name'])
+        print(f"Name is {data['name']}")
+        print("Type:")
+        for type in data['types']:
+            print(type['type']['name']) 
+        print("Abilities:") 
+        for ability in data['abilities']:
+            print(ability['ability']['name'])
+        print("Moves:") 
+        moves = [move['move']['name'] for move in data['moves']]
+        random_moves = random.sample(moves, k=min(len(moves), 4))
+        for move in random_moves:
+            print(move)
+        break # This is optional. Added to make the function stop asking for Pokemon
 
-else:
-    print("Pokemon not found")
+    else:
+        print("Pokemon not found")
+        
